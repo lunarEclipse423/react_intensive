@@ -1,0 +1,81 @@
+.questionnaire {
+  padding: 10px 16px 30px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.title {
+  font-size: 32px;
+  line-height: 38px;
+  color: #000000;
+}
+
+.input_area {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+.input {
+  margin-top: 10px;
+  padding: 6px 10px;
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  background: #ffffff;
+  border: 1px solid #686868;
+  box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  color: black;
+}
+
+.input::placeholder {
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #686868;
+}
+
+.textarea {
+  resize: none;
+}
+
+.button {
+  padding: 10px;
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: #ffffff;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.button_cancel {
+  margin-right: 10px;
+  background: #000000;
+}
+
+.button_cancel:hover {
+  background: #333333;
+}
+
+.button_submit {
+  background: #ffad00;
+}
+
+.button_submit:hover {
+  background: #e47209;
+}
