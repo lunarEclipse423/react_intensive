@@ -1,0 +1,29 @@
+.button {
+  padding: 10px;
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: #ffffff;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.button_cancel {
+  margin-right: 10px;
+  background: #000000;
+}
+
+.button_cancel:hover {
+  background: #333333;
+}
+
+.button_submit {
+  background: #ffad00;
+}
+
+.button_submit:hover {
+  background: #e47209;
+}

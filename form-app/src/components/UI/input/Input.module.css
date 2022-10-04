@@ -1,0 +1,20 @@
+.input {
+  margin-top: 10px;
+  padding: 6px 10px;
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  background: #ffffff;
+  border: 1px solid #686868;
+  box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  color: black;
+}
+
+.input::placeholder {
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #686868;
+}

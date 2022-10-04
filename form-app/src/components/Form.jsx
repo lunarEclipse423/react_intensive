@@ -1,149 +1,217 @@
-import React from "react";
+import React, { useState } from "react";
+import Button from "./UI/button/Button";
+import Application from "./Application";
 import classes from "./Form.module.css";
+import FormInputItem from "./FormInputItem";
+import FormTextareaItem from "./FormTextareaItem";
 
-class Form extends React.Component {
-  constructor(props) {
-    super(props);
-    this.userName = React.createRef();
-    this.userSurname = React.createRef();
-    this.birthDate = React.createRef();
-    this.telephone = React.createRef();
-    this.website = React.createRef();
-    this.aboutUser = React.createRef();
-    this.stack = React.createRef();
-    this.lastProject = React.createRef();
-    this.cancelButtonHandler = this.cancelButtonHandler.bind(this);
-    this.submitButtonHandler = this.submitButtonHandler.bind(this);
-  }
+const Form = () => {
+  const startValues = {
+    userName: "",
+    userSurname: "",
+    birthDate: "",
+    telephone: "",
+    website: "",
+    aboutUser: "",
+    stack: "",
+    lastProject: "",
+  };
+  const textareaCharactersCount = {
+    aboutUser: 0,
+    stack: 0,
+    lastProject: 0,
+  };
 
-  cancelButtonHandler() {
-    this.userName.current.value = "";
-    this.userSurname.current.value = "";
-    this.birthDate.current.value = "";
-    this.telephone.current.value = "";
-    this.website.current.value = "";
-    this.aboutUser.current.value = "";
-    this.stack.current.value = "";
-    this.lastProject.current.value = "";
-  }
+  const [formValues, setFormValues] = useState(startValues);
+  const [charactersCount, setCharactersCount] = useState(textareaCharactersCount);
+  const [errors, setErrors] = useState(startValues);
+  const [isSubmit, setIsSubmit] = useState(false);
 
-  submitButtonHandler() {
-    alert(
-      JSON.stringify({
-        name: this.userName.current.value,
-        surname: this.userSurname.current.value,
-        birthDate: this.birthDate.current.value,
-        telephone: this.telephone.current.value,
-        website: this.website.current.value,
-        aboutUser: this.aboutUser.current.value,
-        stack: this.stack.current.value,
-        lastProject: this.lastProject.current.value,
-      })
-    );
-  }
+  const validate = (values) => {
+    const errors = {};
+    const regexName = /(^[А-Я][а-я])/;
+    const regexTelephone = /\d{1}[-]\d{4}[-]\d{2}[-]\d{2}$/;
+    const regexWebsite = /^(https:\/\/)/;
 
-  render() {
+    for (let key in values) {
+      if (!values[key]) {
+        errors[key] = "Поле пустое. Заполните, пожалуйста";
+      }
+    }
+
+    if (values.userName) {
+      if (!regexName.test(values.userName.trim())) {
+        errors.userName =
+          "Ошибка: имя должно быть написано кириллицей, начинаться с заглавной буквы";
+      }
+    }
+
+    if (values.userSurname) {
+      if (!regexName.test(values.userSurname.trim())) {
+        errors.userSurname =
+          "Ошибка: фамилия должна быть написана кириллицей, начинаться с заглавной буквы";
+      }
+    }
+
+    if (values.telephone) {
+      if (!regexTelephone.test(values.telephone)) {
+        errors.telephone = "Ошибка: телефон должен быть введен в формате x-xxxx-xx-xx";
+      }
+    }
+
+    if (values.website) {
+      if (!regexWebsite.test(values.website)) {
+        errors.website = "Ошибка: сайт должен начинаться с https://";
+      }
+    }
+
+    for (let key in textareaCharactersCount) {
+      if (values[key]) {
+        if (values[key].length > 600) {
+          errors[key] = "Превышен лимит символов в поле";
+        }
+      }
+    }
+
+    return errors;
+  };
+
+  const inputHandler = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const textareaHandler = (e) => {
+    inputHandler(e);
+    const { name } = e.target;
+    const currentTextLength = e.target.value.length;
+    setCharactersCount({ ...charactersCount, [name]: currentTextLength });
+    setErrors({
+      ...errors,
+      [name]: currentTextLength > 600 ? "Превышен лимит символов в поле" : "",
+    });
+  };
+
+  const cancelButtonHandler = (e) => {
+    e.preventDefault();
+    setFormValues(startValues);
+    setErrors({});
+  };
+
+  const submitButtonHandler = (e) => {
+    e.preventDefault();
+    const currentErrors = validate(formValues);
+    setErrors(currentErrors);
+    if (Object.keys(currentErrors).length === 0) {
+      for (let key in formValues) {
+        formValues[key] = formValues[key].trim();
+      }
+      setIsSubmit(true);
+    }
+  };
+
+  if (isSubmit) {
     return (
-      <div className={classes.questionnaire}>
+      <Application
+        userName={formValues.userName}
+        userSurname={formValues.userSurname}
+        userInfo={[
+          { title: "Дата рождения", value: formValues.birthDate },
+          { title: "Телефон", value: formValues.telephone },
+          { title: "Сайт", value: formValues.website },
+          { title: "О себе", value: formValues.aboutUser },
+          { title: "Стек технологий", value: formValues.stack },
+          { title: "Описание последнего проекта", value: formValues.lastProject },
+        ]}
+      />
+    );
+  } else {
+    return (
+      <form className={classes.questionnaire}>
         <h1 className={classes.title}>Создание анкеты</h1>
+        <FormInputItem
+          name="userName"
+          placeholder="Имя"
+          type="text"
+          value={formValues.userName}
+          inputHandler={inputHandler}
+          errorMessage={errors.userName}
+        />
 
-        <label className={classes.input_area}>
-          Имя
-          <input
-            className={classes.input}
-            type="text"
-            placeholder="Имя"
-            ref={this.userName}
-          />
-        </label>
+        <FormInputItem
+          name="userSurname"
+          placeholder="Фамилия"
+          type="text"
+          value={formValues.userSurname}
+          inputHandler={inputHandler}
+          errorMessage={errors.userSurname}
+        />
 
-        <label className={classes.input_area}>
-          Фамилия
-          <input
-            className={classes.input}
-            type="text"
-            placeholder="Фамилия"
-            ref={this.userSurname}
-          />
-        </label>
+        <FormInputItem
+          name="birthDate"
+          placeholder="Дата рождения"
+          type="date"
+          value={formValues.birthDate}
+          inputHandler={inputHandler}
+          errorMessage={errors.birthDate}
+        />
 
-        <label className={classes.input_area}>
-          Дата рождения
-          <input
-            className={classes.input}
-            type="text"
-            placeholder="Дата рождения"
-            ref={this.birthDate}
-          />
-        </label>
+        <FormInputItem
+          name="telephone"
+          placeholder="Телефон"
+          type="text"
+          value={formValues.telephone}
+          inputHandler={inputHandler}
+          errorMessage={errors.telephone}
+        />
 
-        <label className={classes.input_area}>
-          Телефон
-          <input
-            className={classes.input}
-            type="text"
-            placeholder="Телефон"
-            ref={this.telephone}
-          />
-        </label>
+        <FormInputItem
+          name="website"
+          placeholder="Сайт"
+          type="text"
+          value={formValues.website}
+          inputHandler={inputHandler}
+          errorMessage={errors.website}
+        />
 
-        <label className={classes.input_area}>
-          Сайт
-          <input
-            className={classes.input}
-            type="text"
-            placeholder="Сайт"
-            ref={this.website}
-          />
-        </label>
+        <FormTextareaItem
+          name="aboutUser"
+          placeholder="О себе"
+          value={formValues.aboutUser}
+          textareaHandler={textareaHandler}
+          errorMessage={errors.aboutUser}
+          charactersCount={charactersCount.aboutUser}
+        />
 
-        <label className={classes.input_area}>
-          О себе
-          <textarea
-            className={`${classes.input} ${classes.textarea}`}
-            placeholder="О себе"
-            rows="7"
-            ref={this.aboutUser}
-          ></textarea>
-        </label>
+        <FormTextareaItem
+          name="stack"
+          placeholder="Стек технологий"
+          value={formValues.stack}
+          textareaHandler={textareaHandler}
+          errorMessage={errors.stack}
+          charactersCount={charactersCount.stack}
+        />
 
-        <label className={classes.input_area}>
-          Стек технологий
-          <textarea
-            className={`${classes.input} ${classes.textarea}`}
-            placeholder="Стек технологий"
-            rows="7"
-            ref={this.stack}
-          ></textarea>
-        </label>
-
-        <label className={classes.input_area}>
-          Описание последнего проекта
-          <textarea
-            className={`${classes.input} ${classes.textarea}`}
-            placeholder="Описание последнего проекта"
-            rows="7"
-            ref={this.lastProject}
-          ></textarea>
-        </label>
+        <FormTextareaItem
+          name="lastProject"
+          placeholder="Описание последнего проекта"
+          value={formValues.lastProject}
+          textareaHandler={textareaHandler}
+          errorMessage={errors.lastProject}
+          charactersCount={charactersCount.lastProject}
+        />
 
         <div className="questionnaire-buttons">
-          <button
-            className={`${classes.button} ${classes.button_cancel} }`}
-            onClick={this.cancelButtonHandler}
-          >
+          <Button btntype="button_cancel" onClick={cancelButtonHandler}>
             Отмена
-          </button>
-          <button
-            className={`${classes.button}  ${classes.button_submit}`}
-            onClick={this.submitButtonHandler}
-          >
+          </Button>
+          <Button btntype="button_submit" onClick={submitButtonHandler}>
             Сохранить
-          </button>
+          </Button>
         </div>
-      </div>
+      </form>
     );
   }
-}
+};
 
 export default Form;

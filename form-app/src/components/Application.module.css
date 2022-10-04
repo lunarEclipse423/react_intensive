@@ -1,4 +1,4 @@
-.questionnaire {
+.application {
   padding: 10px 16px 30px;
   width: 500px;
   display: flex;
@@ -6,7 +6,10 @@
   justify-content: center;
   font-family: "Montserrat", Verdana, sans-serif;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #686868;
   background: #f1f1f1;
   border-radius: 8px;
 }
@@ -14,5 +17,6 @@
 .title {
   font-size: 32px;
   line-height: 38px;
+  font-weight: 600;
   color: #000000;
 }
