@@ -20,10 +20,16 @@
   background: #333333;
 }
 
-.button_submit {
+.button_submit,
+.button_home {
   background: #ffad00;
 }
 
-.button_submit:hover {
+.button_submit:hover,
+.button_home:hover {
   background: #e47209;
+}
+
+.button_home {
+  padding: 10px 40px 10px;
 }

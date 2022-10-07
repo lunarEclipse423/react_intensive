@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "./UI/button/Button";
-import Application from "./Application";
 import classes from "./Form.module.css";
 import FormInputItem from "./FormInputItem";
 import FormTextareaItem from "./FormTextareaItem";
+import { useNavigate } from "react-router-dom";
+import { UserInfoContext } from "../context/context";
 
 const Form = () => {
+  const navigate = useNavigate();
   const startValues = {
     userName: "",
     userSurname: "",
@@ -25,7 +27,7 @@ const Form = () => {
   const [formValues, setFormValues] = useState(startValues);
   const [charactersCount, setCharactersCount] = useState(textareaCharactersCount);
   const [errors, setErrors] = useState(startValues);
-  const [isSubmit, setIsSubmit] = useState(false);
+  const { userInfo, setUserInfo } = useContext(UserInfoContext);
 
   const validate = (values) => {
     const errors = {};
@@ -96,6 +98,7 @@ const Form = () => {
     e.preventDefault();
     setFormValues(startValues);
     setErrors({});
+    navigate("/");
   };
 
   const submitButtonHandler = (e) => {
@@ -106,27 +109,24 @@ const Form = () => {
       for (let key in formValues) {
         formValues[key] = formValues[key].trim();
       }
-      setIsSubmit(true);
-    }
-  };
-
-  if (isSubmit) {
-    return (
-      <Application
-        userName={formValues.userName}
-        userSurname={formValues.userSurname}
-        userInfo={[
+      setUserInfo({
+        userName: formValues.userName,
+        userSurname: formValues.userSurname,
+        userInfo: [
           { title: "Дата рождения", value: formValues.birthDate },
           { title: "Телефон", value: formValues.telephone },
           { title: "Сайт", value: formValues.website },
           { title: "О себе", value: formValues.aboutUser },
           { title: "Стек технологий", value: formValues.stack },
           { title: "Описание последнего проекта", value: formValues.lastProject },
-        ]}
-      />
-    );
-  } else {
-    return (
+        ],
+      });
+      navigate("/application");
+    }
+  };
+
+  return (
+    <UserInfoContext.Provider value={{ userInfo, setUserInfo }}>
       <form className={classes.questionnaire}>
         <h1 className={classes.title}>Создание анкеты</h1>
         <FormInputItem
@@ -210,8 +210,8 @@ const Form = () => {
           </Button>
         </div>
       </form>
-    );
-  }
+    </UserInfoContext.Provider>
+  );
 };
 
 export default Form;

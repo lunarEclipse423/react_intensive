@@ -8,9 +8,15 @@ const Button = ({ children, ...props }) => {
         {children}
       </button>
     );
-  } else {
+  } else if (props.btntype === "button_submit") {
     return (
       <button {...props} className={`${classes.button} ${classes.button_submit}`}>
+        {children}
+      </button>
+    );
+  } else {
+    return (
+      <button {...props} className={`${classes.button} ${classes.button_home}`}>
         {children}
       </button>
     );

@@ -1,0 +1,18 @@
+.home {
+  padding: 10px 16px 30px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.home_text {
+  margin-bottom: 20px;
+  text-align: center;
+}
